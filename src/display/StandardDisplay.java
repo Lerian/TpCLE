@@ -4,9 +4,10 @@ import main.IDisplayer;
 
 public class StandardDisplay implements IDisplayer {
 	
+	// Boucle pour simuler un traitement prenant du temps
 	public StandardDisplay() {
 		float i = 0;
-		while(i < 1/*000000*/){
+		while(i < 1/*000000/**/){
 			System.out.println(i);
 			i++;}
 	}

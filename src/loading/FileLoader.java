@@ -115,35 +115,13 @@ public class FileLoader {
 	// Charge un afficheur en mémoire
 	// utiliser une map ??
 	public IDisplayer loadDisplayer(String displayername) {
-		/*Properties prop = getProperties("resources/displayers/displayers.txt");
-		System.out.println("1");
-		Object obj = instanciateClass(prop.getProperty(displayername)); // instancie afficheur
-		System.out.println("2");
-		IDisplayer displayer;
-		if(IDisplayer.class.isAssignableFrom(obj.getClass())) { // vérification que IDisplayer est bien implémenté par l'afficheur instancié (pour le cast)
-			displayer = getDisplayer(prop.getProperty(displayername));
-			if(displayer == null) {
-				System.out.println("7");
-				displayer = (IDisplayer)instanciateClass(prop.getProperty(displayername));
-				displayers.add(displayer);
-				displayersName.add(prop.getProperty(displayername));
-				System.out.println("8");
-			}
-			return displayer;
-		}
-		else
-			return null;*/
 		Properties prop = getProperties("resources/displayers/displayers.txt");
 		IDisplayer displayer = getDisplayer(prop.getProperty(displayername));
 		if(displayer == null) {
-			Object obj = instanciateClass(prop.getProperty(displayername)); // instancie afficheur
-			if(IDisplayer.class.isAssignableFrom(obj.getClass())) { // vérification que IDisplayer est bien implémenté par l'afficheur instancié (pour le cast)
-				displayers.add((IDisplayer)obj);
-				displayersName.add(prop.getProperty(displayername));
-				return (IDisplayer)obj;
-			} else {
-				return null;
-			}
+			LazzyDisplayer obj = new LazzyDisplayer(prop.getProperty(displayername)); // instancie le proxy d'afficheur
+			displayers.add(obj);
+			displayersName.add(prop.getProperty(displayername));
+			return obj;
 		} else {
 			return displayer;
 		}
