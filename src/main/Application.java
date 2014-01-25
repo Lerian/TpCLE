@@ -13,7 +13,8 @@ public class Application {
 	public static void main(String[] args) {
 		FileLoader loader = new FileLoader();
 		System.out.println(loader.listDisplayers());
-		IDisplayer displayer = loader.loadDisplayer("standard");
+		IDisplayer displayer;
+		displayer = loader.loadDisplayer("standard");
 		displayer.display(loader.loadData("resources/instances/toto.txt"));
 		displayer = loader.loadDisplayer("standard");
 		

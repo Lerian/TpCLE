@@ -3,6 +3,13 @@ package display;
 import main.IDisplayer;
 
 public class StandardDisplay implements IDisplayer {
+	
+	public StandardDisplay() {
+		float i = 0;
+		while(i < 1/*000000*/){
+			System.out.println(i);
+			i++;}
+	}
 
 	@Override
 	public void display(Object obj) {
