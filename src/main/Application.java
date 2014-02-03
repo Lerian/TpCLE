@@ -11,15 +11,29 @@ public class Application {
 	 * - afficher
 	 */
 	public static void main(String[] args) {
+		//
 		FileLoader loader = new FileLoader();
 		System.out.println(loader.listDisplayers());
 		IDisplayer displayer;
-		System.out.println("Chargement de l'afficheur 1");
+		System.out.println("\nChargement de l'afficheur 1");
 		displayer = loader.loadDisplayer("standard");
 		System.out.println("Utilisation de l'afficheur 1");
 		displayer.display(loader.loadData("resources/instances/toto.txt"));
-		System.out.println("Chargement de l'afficheur 2");
+		
+		System.out.println("\nChargement de l'afficheur 2");
+		displayer = loader.loadDisplayer("standardMaj");
+		System.out.println("Utilisation de l'afficheur 2");
+		displayer.display(loader.loadData("resources/instances/toto.txt"));
+		
+		System.out.println("\nChargement de l'afficheur 1");
 		displayer = loader.loadDisplayer("standard");
+		System.out.println("Utilisation de l'afficheur 1");
+		displayer.display(loader.loadData("resources/instances/toto.txt"));/**/
+
+		System.out.println("\nChargement de l'afficheur 2");
+		displayer = loader.loadDisplayer("standardMaj");
+		System.out.println("Utilisation de l'afficheur 2");
+		displayer.display(loader.loadData("resources/instances/toto.txt"));
 		
 		/*/ Test du duck typing
 		System.out.println("------------------Début du test de duck typing------------------");

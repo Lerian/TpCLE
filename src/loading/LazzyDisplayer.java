@@ -4,11 +4,13 @@ import main.IDisplayer;
 
 public class LazzyDisplayer implements IDisplayer {
 
+	static int nbInst;
 	IDisplayer notLazzyDisplayer;
 	String notLazzyDisplayerClassName;
 	
 	public LazzyDisplayer(String displayerClassName) {
 		notLazzyDisplayerClassName = displayerClassName;
+		nbInst++;
 	}
 		
 	// Instancie l'afficheur demandé
@@ -39,7 +41,11 @@ public class LazzyDisplayer implements IDisplayer {
 		if (notLazzyDisplayer == null) {
 			notLazzyDisplayer = instanciateDisplayer(notLazzyDisplayerClassName);
 		}
+		System.out.println(">>Lazzy:"+nbInst);
 		notLazzyDisplayer.display(obj);
 	}
 
+	public String getNotLazzyDisplayerClassName() {
+		return notLazzyDisplayerClassName;
+	}
 }

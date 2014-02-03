@@ -1,1 +1,2 @@
-standard = display.StandardDisplay
+standard = display.StandardDisplay, lazzy, singleton
+standardMaj = display.StandardMajDisplay

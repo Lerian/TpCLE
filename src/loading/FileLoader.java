@@ -113,17 +113,48 @@ public class FileLoader {
 	}
 	
 	// Charge un afficheur en mémoire
-	// utiliser une map ??
 	public IDisplayer loadDisplayer(String displayername) {
 		Properties prop = getProperties("resources/displayers/displayers.txt");
-		IDisplayer displayer = getDisplayer(prop.getProperty(displayername));
-		if(displayer == null) {
-			LazzyDisplayer obj = new LazzyDisplayer(prop.getProperty(displayername)); // instancie le proxy d'afficheur
-			displayers.add(obj);
-			displayersName.add(prop.getProperty(displayername));
-			return obj;
-		} else {
-			return displayer;
+		// Une seule instance de l'afficheur demandée
+		if(checkProperty("singleton", prop.getProperty(displayername))) {
+			IDisplayer displayer = getDisplayer(className(prop.getProperty(displayername)));
+			if(displayer == null) {
+				// Chargement de l'afficheur via un proxy
+				if(checkProperty("lazzy", prop.getProperty(displayername))) {
+					LazzyDisplayer obj = new LazzyDisplayer(className(prop.getProperty(displayername))); // instancie le proxy d'afficheur
+					displayers.add(obj);
+					displayersName.add(className(prop.getProperty(displayername)));
+					return obj;
+				} else { // Chargement de l'afficheur
+					Object obj = instanciateClass(className(prop.getProperty(displayername))); // instancie afficheur
+					if(IDisplayer.class.isAssignableFrom(obj.getClass())) { // vérification que IDisplayer est bien implémenté par l'afficheur instancié (pour le cast)
+						displayers.add((IDisplayer)obj);
+						displayersName.add(prop.getProperty(displayername));
+						return (IDisplayer)obj;
+					} else {
+						return null;
+					}
+				}
+			} else {
+				return displayer;
+			}
+		} else { // Instanciation d'un nouvel afficheur
+			// Chargement de l'afficheur via un proxy
+			if(checkProperty("lazzy", prop.getProperty(displayername))) {
+				LazzyDisplayer obj = new LazzyDisplayer(className(prop.getProperty(displayername))); // instancie le proxy d'afficheur
+				displayers.add(obj);
+				displayersName.add(className(prop.getProperty(displayername)));
+				return obj;
+			} else { // Chargement de l'afficheur
+				Object obj = instanciateClass(className(prop.getProperty(displayername))); // instancie afficheur
+				if(IDisplayer.class.isAssignableFrom(obj.getClass())) { // vérification que IDisplayer est bien implémenté par l'afficheur instancié (pour le cast)
+					displayers.add((IDisplayer)obj);
+					displayersName.add(prop.getProperty(displayername));
+					return (IDisplayer)obj;
+				} else {
+					return null;
+				}
+			}
 		}
 	}
 	
@@ -131,6 +162,24 @@ public class FileLoader {
 	public Set<String> listDisplayers() {
 		Properties prop = getProperties("resources/displayers/displayers.txt");
 		return prop.stringPropertyNames();
+	}
+	
+	// Récupère le nom de la classe voulue dans les paramètres de création
+	private String className(String displayerDescription) {
+		String[] properties = displayerDescription.split(", ");
+		
+		return properties[0];
+	}
+	
+	// Vérifie si la propriété donnée est présente pour la classe donnée
+	private boolean checkProperty(String property, String displayerDescription) {
+		String[] properties = displayerDescription.split(", ");
+		
+		for(String s : properties) {
+			if(s.toLowerCase().equals(property))
+				return true;
+		}
+		return false;
 	}
 	
 	// Vérifie si l'afficheur demandé est présent en mémoire
@@ -141,6 +190,8 @@ public class FileLoader {
 		}
 		for(IDisplayer disp : displayers) {
 			if(disp.getClass().getName().equals(displayername))
+				return disp;
+			if(disp.getClass().getName().equals("loading.LazzyDisplayer") && ((LazzyDisplayer)disp).getNotLazzyDisplayerClassName().equals(displayername))
 				return disp;
 		}
 		return null;
