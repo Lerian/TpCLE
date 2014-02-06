@@ -197,4 +197,3 @@ public class FileLoader {
 		return null;
 	}
 }
-// charger l'afficheur uniquement à l'appel d'afficher() -> pattern proxy
